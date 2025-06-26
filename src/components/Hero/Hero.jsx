@@ -1,100 +1,113 @@
 // import styles from "./Hero.module.css";
-// components/Hero.jsx
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import Button from "../Button";
+import Button from "../UI/button/Index";
+import axios from "axios";
 
-const Container = styled.div`
-  padding: 2rem;
-  background-color: #f8f8f8;
-`;
-
-const HeroSection = styled.section`
+const StyledHero = styled.section`
+  margin: 1rem;
   display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-`;
+  flex-direction: column;
+  text-align: center;
+  gap: 3rem;
 
-const Left = styled.div`
-  flex: 1;
-`;
+  .left {
+    margin-bottom: 1rem;
+    flex-basis: 40%;
+  }
 
-const Right = styled.div`
-  flex: 1;
-`;
+  .right {
+    flex-basis: 60%;
+  }
 
-const Title = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-`;
+  h2 {
+    color: #4361ee;
+    margin-bottom: 1rem;
+    font-size: 2.44rem;
+  }
 
-const Genre = styled.h3`
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-`;
+  h3 {
+    color: #b5179e;
+    margin-bottom: 1rem;
+    font-size: 1.59rem;
+  }
 
-const Description = styled.p`
-  font-size: 1rem;
-  margin-bottom: 1rem;
-`;
+  p {
+    color: #64748b;
+    margin-bottom: 1rem;
+  }
 
-const Poster = styled.img`
-  width: 100%;
-  max-width: 300px;
-`;
+  button {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #4361ee;
+    color: #fff;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 25px;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 1200px;
+    margin: 3rem auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }`
+;
 
 function Hero() {
   const [movie, setMovie] = useState({});
+  const API_KEY = import.meta.env.VITE_API_KEY;
 
   useEffect(() => {
     async function fetchTrendingMovies() {
       const API_KEY = import.meta.env.VITE_API_KEY;
-      const URL = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`;
-
+      const URL = `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`;
       const response = await axios(URL);
-      const firstMovie = response.data.results[0];
+      const firstMovie = response.data.results[0]; //mengambil data pertama
+      // console.log(firstMovie)
       return firstMovie;
     }
     async function fetchDetailMovie() {
-    const trendingMovie = await fetchDetailMovies();
-    const id = trendingMovie.id;
-
-    const params = `?api_key=${API_KEY}&append_to_response= videos`;
-    const URL = `https://api.themoviedb.org/3/movie/${id}${params}`;
-    const response = await axios(URL);
-    setMovie(response.data);
+      const trendingMovie = await fetchTrendingMovies();
+      const id = trendingMovie.id;
+      const params = `?api_key=${API_KEY}&append_to_response=videos`;
+      const URL = `https://api.themoviedb.org/3/movie/${id}${params}`;
+      const response = await axios(URL);
+      setMovie(response.data);
     }
-
-    fetchDetailMovie();
-    fetchTrendingMovies();
+    fetchDetailMovie(), fetchTrendingMovies();
   }, []);
 
-  
+  // useEffect(() => {
+  //   async function fetchMovie() {
+  //     const url = "https://www.omdbapi.com/?apikey=fcf50ae6&i=tt2975590";
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     setMovie(data);
+  //   }
 
-  useEffect(() => {
-    async function fetchMovie() {
-      const url = "https://www.omdbapi.com/?apikey=fcf50ae6&i=tt2975590";
-      const response = await fetch(url);
-      const data = await response.json();
-      setMovie(data);
-    }
-    fetchMovie();
-  }, []);
+  //   fetchMovie();
+  // }, []);
 
   return (
-    <Container>
-      <HeroSection>
-        <Left>
-          <Title>{movie.Title}</Title>
-          <Genre>Genre: {movie.Genre}</Genre>
-          <Description>{movie.Plot}</Description>
-          <Button size="md">Watch</Button>
-        </Left>
-        <Right>
-          <Poster src={movie.Poster} alt={movie.Title} />
-        </Right>
-      </HeroSection>
-    </Container>
+    <StyledHero>
+      <div className="left">
+        <h2>{movie.title}</h2>
+        <h3>Genre: {movie.Genre}</h3>
+        <p>{movie.overview}</p>
+        <Button size="md" variant="primary">Watch</Button>
+      </div>
+      <div className="right">
+        <img src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt={movie.title} />
+      </div>
+    </StyledHero>
   );
 }
 

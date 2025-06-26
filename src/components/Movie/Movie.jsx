@@ -1,7 +1,8 @@
 // import styles from './Movie.module.css';
 import styled from "styled-components";
+import Form from "../From";
 import Media from "../Media";
-import Form from "../Form";
+import {Link} from "react-router-dom"
 
 const StyledMovie = styled.div `
 margin-bottom: 1rem;
@@ -43,15 +44,17 @@ function Movie(props){
     const tmbdImage = `https://image.tmdb.org/t/p/w300/${movie.poster_path}`;
     const year = movie.year || movie.release_date; 
 
-    return(
-        <StyledMovie>
-            <img src={movie.poster || tmbdImage }
-            alt={movie.title} 
-            />
-            <h3>{movie.title}</h3>
-            <p>{year}</p>
-        </StyledMovie>
-    )
+    return (
+    <StyledMovie>
+      <img src={movie.poster || tmbdImage} alt={movie.title} />
+      
+      <Link to={`/movie/${movie.id}`}>
+        <h3>{movie.title}</h3>
+      </Link>
+
+      <p>{year}</p>
+    </StyledMovie>
+  );
 }
 
 export default Movie;

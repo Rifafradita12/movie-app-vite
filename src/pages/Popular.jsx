@@ -1,34 +1,35 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Hero from "../components/Hero/Hero";
 import Movies from "../components/Movies/Movies"; 
+import ENDPOINTS from "../utils/constans/endpoint";
+import MoviesContext from "../components/context/MoviesContext";
 
-function Popular() {
-  const [movies, setMovies] = useState([]);
+function PopularMovie() {
+  // const [movies, setMovies] = useState([]);
+  const {setMovies} = useContext(MoviesContext);
 
-  useEffect(() => {
-    async function fetchPopularMovie() {
-      const API_KEY = import.meta.env.VITE_API_KEY;
-      const URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
+useEffect(function()  {
+  async function fetchPopularMovie() {
+    // const API_KEY = import.meta.env.VITE_API_KEY;
+    // const URL = https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY};
+    // const response = await axios.get(URL);
 
-      try {
-        const response = await axios.get(URL);
-        setMovies(response.data.results);
-        // console.log(response.data.results);
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      }
-    }
+    const response = await axios.get(ENDPOINTS.POPULAR);
+    setMovies(response.data.results);
+    // console.log(response.data.results);
+  }
 
-    fetchPopularMovie();
-  }, []);
+
+  fetchPopularMovie();
+}, []);
 
   return (
     <>
       <Hero />
-      <Movies movies={movies} />
+      <Movies title ="Popular Movies" />
     </>
   );
 }
 
-export default Popular;
+export default PopularMovie;

@@ -1,33 +1,26 @@
-// src/pages/TopRated.jsx
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import Hero from "../components/Hero/Hero";
 import Movies from "../components/Movies/Movies";
+import ENDPOINTS from "../utils/constans/endpoint";
+import MoviesContext from "../components/context/MoviesContext";
 
 function TopRatedMovie() {
-  const [movies, setMovies] = useState([]);
+  const { setMovies } = useContext(MoviesContext);
 
   useEffect(() => {
-    async function fetchTopRatedMovies() {
-      const API_KEY = import.meta.env.VITE_API_KEY;
-      const URL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`;
-
-      try {
-        const response = await axios.get(URL);
-        setMovies(response.data.results);
-        // console.log(response.data.results);
-      } catch (error) {
-        console.error("Gagal mengambil data Top Rated:", error);
-      }
+    async function fetchTopRated() {
+      const response = await axios.get(ENDPOINTS.TOP_RATED);
+      setMovies(response.data.results);
     }
 
-    fetchTopRatedMovies();
+    fetchTopRated();
   }, []);
 
   return (
     <>
       <Hero />
-      <Movies movies={movies} />
+      <Movies title="Top Rated Movies" />
     </>
   );
 }
