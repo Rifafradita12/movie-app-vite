@@ -6,7 +6,7 @@ import Movies from '../components/Movies/Movies';
 import Counter from '../components/Counter';
 import AddMovieForm from '../components/AddMovie/AddMovie';
 import data from '../utils/constans/data';
-import Button from "../components/button/Index";
+import Button from "../components/Button/Index";
 
 
 
